@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Demo</title>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="dist/css/demo1.min.css" rel="stylesheet">
+    <script src="dist/js/angular/angular.min.js"></script>
+    <script src="dist/js/angular-animate/angular-animate.min.js"></script>
+    <script src="dist/js/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+<section class="progressPage page" ng-hide="progressHide" id="progress" resize>
+    <div class="progress-wrap">
+        <section>
+            <uib-progressbar class="progress-line progress-striped active" type="success" value="progressNum"></uib-progressbar>
+        </section>
+    </div>
+</section>
+
+<script>
+    var app = angular.module('myApp', ['ui.bootstrap','ngAnimate']);
+    app.controller('myCtrl', function ($scope, $timeout, $window) {
+        $scope.startWp = document.querySelector('.start-wp');
+        $scope.circleWp = document.querySelector('.circle-wp');
+        $scope.progressNum = 2;
+        $scope.startHide = true;
+        $scope.cicleHide = true;
+        $scope.progressHide = false;
+        $scope.animateProgress = function (progress, step, callback) {
+            var that = this;
+            if ($scope.progressNum < progress) {
+                $timeout(function () {
+                    $scope.progressNum += step;
+                    $scope.animateProgress(progress, step, callback);
+                }, 100);
+            } else {
+                if (callback) {
+                    callback();
+                }
+            }
+
+        };
+        $scope.animateProgress(43, 2, function () {
+            $scope.animateProgress(79, 1, function () {
+                $timeout(function(){
+                    $scope.animateProgress(100, 3,function(){
+//                        Do somethings
+//                        $scope.progressHide = true;
+                    });
+                },1500);
+            })
+        });
+    });
+    app.directive('resize', function ($window) {
+        return {
+            link: function (scope, elem, attrs) {
+                scope.onResize = function () {
+                    var w_h = $window.innerHeight;
+                    var ani_w1 = document.querySelector('.start-wp');
+                    angular.element(elem).css({
+                        height: w_h + 'px'
+                    });
+                    angular.element(ani_w1).css({
+                        backgroundSize: 'auto '+ w_h + 'px'
+                    })
+                };
+                scope.onResize();
+                angular.element($window).bind('resize', function () {
+                    scope.onResize();
+                })
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
