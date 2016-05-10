@@ -1,2 +1,2 @@
 # angular-progress
-This is an angular demo, progress for ui-bootstrap.
+这个一个angular制作的进度条demo，用到ui-bootstrap插件。
